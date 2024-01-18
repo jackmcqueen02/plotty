@@ -15,4 +15,4 @@ data = [x,y]
 #with plt.style.context(['science', 'no-latex']):
  #plotty_mcplotface(data)
 
-plotty_mcplotface(data)
+plotty_array(data)
