@@ -1,6 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Created on Thu Jan 18 21:49:17 2024
+
+@author: jackmcqueen
+"""
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Jan  8 21:41:08 2024
 
 @author: jackmcqueen
@@ -695,12 +703,46 @@ def error_plot_gaussian(data, x_label, y_label, plot_title):
     plt.legend(framealpha=0.5, frameon=True, markerscale=1, fontsize=12)
 
     plt.show()  # Display the plot
+
+def unpacker3D(file_name):
+    data = np.loadtxt(file_name)
+    x_array = []
+    y_array = []
+    error_array = []
+    for i in range(data.shape[0]):
+        x_value = data[i][0]
+        y_value = data[i][1]
+        err_value = data[i][2]
+        x_array.append(x_value)
+        y_array.append(y_value)
+        error_array.append(err_value)
+    dataset = np.array([x_array, y_array, error_array])
+    return dataset
+
+def unpacker2D(file_name):
+    data = np.loadtxt(file_name)
+    x_array = []
+    y_array = []
+    for i in range(data.shape[0]):
+        x_value = data[i][0]
+        y_value = data[i][1]
+        x_array.append(x_value)
+        y_array.append(y_value)
+    dataset = np.array([x_array, y_array])
+    return dataset
     
-def plotty_mcplotface(data):
+def plotty_file(file_name):
     print('------------------------------------')
     print('-------- Plotty_McPlotFace v1 ------')
     print('------ THE ALL-IN-ONE PLOTTER! -----')
     print('------------------------------------')
+    temp = np.loadtxt(file_name)
+    if temp.shape[1] == 3:
+        data = unpacker3D(file_name)
+    elif temp.shape[1] == 2:
+        data = unpacker2D(file_name)
+        
+    
     functions = [PowerLaw,linear,exponential,polynomial]
     r_squared_values = []
     cleaned_data = [[],[]]
@@ -711,7 +753,7 @@ def plotty_mcplotface(data):
 
 
     
-    clean = input("Would you like to clean the dataset by removing infinity values? [Recommended] (y/n): ")
+    clean = input("The data must be cleaned for plotting, would you like to continue? [Recommended] (y/n): ")
 
     if clean == 'y' and error_bar == 'n':
         for i in range(len(data[0])):
@@ -878,8 +920,185 @@ def plotty_mcplotface(data):
     print('---------------------------------------')
 
 
+def plotty_array(data):
+    print('------------------------------------')
+    print('-------- Plotty_McPlotFace v1 ------')
+    print('------ THE ALL-IN-ONE PLOTTER! -----')
+    print('------------------------------------')
+    functions = [PowerLaw,linear,exponential,polynomial]
+    r_squared_values = []
+    cleaned_data = [[],[]]
+    cleaned_data_err = [[],[],[]] 
+    positive_data = [[],[]]
+    positive_data_err = [[],[],[]]
+    error_bar = input('Does the dataset contain errors on values? (y/n): ')
 
 
     
-    
-    
+    clean = input("The data must be cleaned for plotting, would you like to continue? [Recommended] (y/n): ")
+
+    if clean == 'y' and error_bar == 'n':
+        for i in range(len(data[0])):
+            x,y = data[0][i], data[1][i]
+            #if np.isinf(x) or np.isinf(y):
+            if np.any(np.isinf(x)) or np.any(np.isinf(y)):
+                print(f"--Inf At Index {i}--")
+            elif not (np.any(np.isnan(x)) or np.any(np.isinf(x)) or np.any(np.isnan(y)) or np.any(np.isinf(y))):
+                cleaned_data[0].append(x)
+                cleaned_data[1].append(y)
+        data_arr = np.array(cleaned_data)
+        pos_arr = data_arr
+    found_infinity = False
+    if clean == 'y' and error_bar == 'y':
+        for i in range(len(data[0])):
+            x,y,err = data[0][i], data[1][i],data[2][i]
+            if np.any(np.isinf(x)) or np.any(np.isinf(y)):
+                print(f"Inf At Index {i}")
+                found_infinity = True 
+            elif not np.any(np.isnan(x)) or np.any(np.isinf(x)) or np.any(np.isnan(y)) or np.any(np.isinf(y)):
+                cleaned_data_err[0].append(x)
+                cleaned_data_err[1].append(y)
+                cleaned_data_err[2].append(err)
+        data_arr = np.array(cleaned_data_err)
+        pos_err = data_arr
+        if not found_infinity:
+            print('--No Singularities Were Found--')
+    if clean == 'n':
+        pos_arr = np.array(data)
+        cleaned_data = np.array(data)
+        
+    if error_bar =='n':
+        for i in range(len(cleaned_data[0])):
+            x,y = cleaned_data[0][i],cleaned_data[1][i]
+            if y > 0:
+                positive_data[0].append(x)
+                positive_data[1].append(y)
+        pos_arr = np.array(positive_data)
+    if error_bar == 'y':
+        for i in range(len(cleaned_data_err[0])):
+            x,y,err = cleaned_data_err[0][i],cleaned_data_err[1][i],cleaned_data_err[2][i]
+            if y > 0:
+                positive_data_err[0].append(x)
+                positive_data_err[1].append(y)
+                positive_data_err[2].append(err)
+        pos_arr = np.array(positive_data_err)
+   
+    x_label = input('X Label For Plot:')
+    y_label = input('Y Label For Plot:')
+    plot_title = input('Plot Title:')
+    if error_bar == 'n':
+        try:
+            for function in functions:
+                    try:
+                        if function== exponential or PowerLaw:
+                            rsq = r_squared(pos_arr, function)
+                            r_squared_values.append(rsq)
+                        else:
+                            rsq = r_squared(data_arr, function)
+                            r_squared_values.append(rsq)
+                            
+                    except Exception as e:
+                        r_squared_values.append(0)
+                        print(f'The {function.__name__} regression failed')
+                        error_code= input("-Would You Like The Error Code? (y)/(n):")
+                        if error_code == 'y':
+                            print(e)
+                        elif error_code == 'n':
+                            pass
+                        continue
+            fit_function = functions[np.argmax(r_squared_values)]
+            if fit_function == exponential or PowerLaw: 
+                LSF(pos_arr, fit_function, x_label, y_label, plot_title,function.__name__)
+                print('---------AUTO FIT COMPLETE -------')
+            else:
+                LSF(data_arr, fit_function, x_label,y_label, plot_title,function.__name__)
+                print('---------AUTO FIT COMPLETE -------')
+                
+        except Exception as error:
+            error_plot(data_arr,x_label,y_label,plot_title)
+            print(f'-----The Data Did Not Match Any Of The Predefined Functions------')
+            fit_error = input("-Would You Like The Error Code? (y)/(n):")
+            if fit_error == 'y':
+                print(error)
+                print('---------AUTO FIT COMPLETE -------')
+            elif fit_error == 'n':
+                print('---------AUTO FIT COMPLETE -------')
+        
+        replot = input('-Would You Like to Refit: (lin),(exp),(pow),(pol),(n):')
+        try:
+            if replot == 'lin':
+                LSF(pos_arr, linear, x_label, y_label, plot_title,'linear')
+                print('---------Linear FIT COMPLETE -------')
+            if replot == 'pow':
+                LSF(pos_arr, PowerLaw, x_label, y_label, plot_title,'power law')
+                print('---------Power Law FIT COMPLETE -------')
+            if replot == 'exp':
+                LSF(pos_arr, exponential, x_label, y_label, plot_title,'exponential')
+                print('---------Exponential FIT COMPLETE -------')
+            if replot == 'pol':
+                LSF(pos_arr,polynomial, x_label, y_label, plot_title,'polynomial')
+                print('---------Exponential FIT COMPLETE -------')
+        except Exception as fail:
+            print('---- Fit Failed -----')
+    elif error_bar == 'y':
+        try:
+            for function in functions:
+                    try:
+                        if function== exponential or PowerLaw:
+                            rsq = r_squared(pos_arr, function)
+                            r_squared_values.append(rsq)
+                        else:
+                            rsq = r_squared(data_arr, function)
+                            r_squared_values.append(rsq)
+                            
+                    except Exception as e:
+                        r_squared_values.append(0)
+                        print(f'The {function.__name__} regression failed')
+                        error_code= input("-Would You Like The Error Code? (y)/(n):")
+                        if error_code == 'y':
+                            print(e)
+                        elif error_code == 'n':
+                            pass
+                        continue
+            fit_function = functions[np.argmax(r_squared_values)]
+            if fit_function == exponential or PowerLaw: 
+                error_LSF(pos_arr, fit_function, x_label, y_label, plot_title,function.__name__)
+                print('---------AUTO FIT COMPLETE -------')
+            else:
+                error_LSF(data_arr, fit_function, x_label, y_label, plot_title,function.__name__)
+                print('---------AUTO FIT COMPLETE -------')
+                
+        except Exception as error:
+            error_plot(data_arr,x_label,y_label,plot_title)
+            print(f'-----Unable to fit Due To Singularity------')
+            fit_error = input("-Would You Like The Error Code? (y)/(n):")
+            if fit_error == 'y':
+                print(error)
+                print('---------AUTO FIT COMPLETE -------')
+            elif fit_error == 'n':
+                print('---------AUTO FIT COMPLETE -------')
+        
+        replot = input('-Would You Like to Refit: (lin),(exp),(pow),(pol),(n):')
+        try:
+            if replot == 'lin':
+                error_LSF(pos_arr, linear, x_label, y_label, plot_title,'linear')
+                print('---------Linear FIT COMPLETE -------')
+            if replot == 'pow':
+                error_LSF(pos_arr, PowerLaw, x_label, y_label, plot_title,'power law')
+                print('---------Power Law FIT COMPLETE -------')
+            if replot == 'exp':
+                error_LSF(pos_arr, exponential, x_label, y_label, plot_title,'exponential')
+                print('---------Exponential FIT COMPLETE -------')
+            if replot == 'pol':
+                error_LSF(pos_arr, polynomial, x_label, y_label, plot_title,'polynomial')
+                print('---------Exponential FIT COMPLETE -------')
+        except Exception as fail:
+            print('---- Fit Failed-----')
+
+    print('---------------------------------------')
+    print('------------ FIT COMPLETE ------------')
+    print('-------- plotty_mcplotface v1 --------')
+    print('-------- Created by Jack McQueen ------')
+    print('---------------------------------------')
+
+
