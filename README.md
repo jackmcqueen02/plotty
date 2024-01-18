@@ -35,7 +35,8 @@ plotty_mcplotface(data)
 ## Examples
 ![carbon_emmision_latex](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/6b550af7-2917-43ab-b049-17d1435e2df1)
 ![uk annual temp change](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/0a4338fb-fc60-4eec-b3f1-fa247c748007)
-![image](https://github.com/jackmcqueen02/plotty/assets/157049725/47125fbc-25b0-4928-bfad-71fc723a021a)
+![image](https://github.com/jackmcqueen02/plotty/assets/157049725/07b722d9-abdd-4769-81cd-e6a03702b87a)
+
 
 
 
