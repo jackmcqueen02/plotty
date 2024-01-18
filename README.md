@@ -8,7 +8,7 @@ https://github.com/garrettj403/SciencePlots
 ## Usage
 
 ```python
-from plotty_mcplotface import *
+from plotty import *
 
 # Data without errors
 x = [0,1,2,3,4,5]
@@ -16,11 +16,11 @@ y = [2,4,6,8,10,12]
 data = [x,y]
 
 # displays residual and regression fit
-plotty_mcplotface(data)
+plotty_array(data)
 ```
 
 ```python
-from plotty_mcplotface import *
+from plotty import *
 
 # Data with errors
 x = [0,1,2,3,4,5]
@@ -29,9 +29,14 @@ errors = [0.1,0.1,0.1,0.1,0.1,0.1]
 data = [x,y,errors]
 
 # displays residual and regression fit
-plotty_mcplotface(data)
+plotty_array(data)
 ```
+```python
+from plotty import *
 
+# displays residual and regression fit with data read from file
+plotty_file('data.txt')
+```
 ## Examples
 ![carbon_emmision_latex](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/6b550af7-2917-43ab-b049-17d1435e2df1)
 ![uk annual temp change](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/0a4338fb-fc60-4eec-b3f1-fa247c748007)
