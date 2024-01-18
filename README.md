@@ -8,7 +8,7 @@ https://github.com/garrettj403/SciencePlots
 ## Usage
 
 ```python
-from plotty import *
+from plotty import plotty_array
 
 # Data without errors
 x = [0,1,2,3,4,5]
@@ -20,7 +20,7 @@ plotty_array(data)
 ```
 
 ```python
-from plotty import *
+from plotty import plotty_array
 
 # Data with errors
 x = [0,1,2,3,4,5]
@@ -32,7 +32,7 @@ data = [x,y,errors]
 plotty_array(data)
 ```
 ```python
-from plotty import *
+from plotty import plotty_file
 
 # displays residual and regression fit with data read from file
 plotty_file('data.txt')
