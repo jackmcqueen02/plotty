@@ -533,11 +533,14 @@ def error_LSF(data, fit_function, x_label, y_label, plot_title,label):
 
     # formats the D and p values to be presentable on the plots as they have
     # a high number of floating points.
-    
+    if np.shape(data)[0] == 3:
+        chi2_cheese = np.array([np.abs(data[0]),data[1],data[2]])
+    elif np.shape(data)[1] == 2:
+        chi2_cheese = np.array([np.abs(data[0]),data[1]])
     rsquared = r_squared(data,fit_function)
     rsquared_formatted = f'{rsquared:.3f}'
-    chi2 = chi2_test(data)[0]
-    dof = chi2_test(data)[1]
+    chi2 = chi2_test(chi2_cheese)[0]
+    dof = chi2_test(chi2_cheese)[1]
     chi2ndf = chi2/dof
     chi2ndf_formatted = f'{chi2ndf:.3f}'
     chi2_formatted = f'{chi2:.3f}'
