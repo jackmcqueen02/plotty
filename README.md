@@ -27,6 +27,12 @@ data = [x,y,errors]
 # displays residual and regression fit
 plotty_mcplotface(data)
 ```
+
+## Examples
+![carbon_emmision_latex](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/6b550af7-2917-43ab-b049-17d1435e2df1)
+![uk annual temp change](https://github.com/jackmcqueen02/plotty_mcplotface/assets/157049725/0a4338fb-fc60-4eec-b3f1-fa247c748007)
+
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
