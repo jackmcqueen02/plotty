@@ -1,4 +1,4 @@
-from plotty_mcplotface import *
+from plotty import plotty_array
 #import scienceplots, install for latex looking plots
 
 def linear_example(x):
