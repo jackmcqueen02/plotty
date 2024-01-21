@@ -1,6 +1,6 @@
 # # plotty
 
-plotty is a Python-based tool designed to streamline the process of regression analysis for scientific papers. This software aims to automate and simplify the regression process, allowing researchers to focus on their analyses rather than the intricacies of coding.
+plotty is a Python-based tool designed to streamline the process of regression analysis for scientific papers. This software aims to automate and simplify the regression process.
 
 ## Recommended Modules
 scienceplots is recommended for improved figure presentation.
